@@ -13,6 +13,7 @@ $stdout.sync = true
 
 
 pid = Process.spawn <<"EOT"
+  sudo su
   cd "#{ARGV[1]}"
   mkdir sqlite
   curl -o sqlite.zip 'http://www.sqlite.org/snapshot/sqlite-amalgamation-201409200035.zip'
