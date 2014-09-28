@@ -3,6 +3,28 @@
 # sync output
 $stdout.sync = true
 
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite3.so.0.8.6
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite3.so
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite.so.0
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite.so
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite3.so.0
+# 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite.so.0.8.6
+
+
+
+pid = Process.spawn <<"EOT"
+  cd "#{ARG[1]}"
+  mkdir sqlite
+  curl -o sqlite.zip 'http://www.sqlite.org/snapshot/sqlite-amalgamation-201409200035.zip'
+  unzip sqlite.zip -d sqlite
+  cd sqlite
+  gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o libsqlite3.so -fPIC -lpthread -ldl sqlite3.c
+  find /usr/lib -name "libsqlite*" -delete
+  cp libsqlite3.so /usr/lib/libsqlite3.so
+  cp libsqlite3.so /usr/lib/libsqlite.so
+EOT
+Process.wait(pid)
+
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
 require "language_pack/shell_helpers"
