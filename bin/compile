@@ -22,11 +22,14 @@ pid = Process.spawn <<"EOT"
   curl -o sqlite.zip 'http://www.sqlite.org/snapshot/sqlite-amalgamation-201409200035.zip'
   unzip sqlite.zip -d sqlite
   cd sqlite
-  gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o libsqlite.so -fPIC -lpthread -ldl sqlite3.c
+  mkdir include
+  mkdir lib
+  cp sqlite3.h lib/
+  gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o include/libsqlite3.so -fPIC -lpthread -ldl sqlite3.c
 EOT
 Process.wait(pid)
 
-ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite/"
+ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite"
 
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
