@@ -43,3 +43,8 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
     end
   end
 end
+
+pid = Process.spawn <<"EOT"
+  find / -name 'mkmf.log' | grep sqlite | xargs cat
+EOT
+Process.wait(pid)
