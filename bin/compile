@@ -29,7 +29,7 @@ pid = Process.spawn <<"EOT"
 EOT
 Process.wait(pid)
 
-ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite"
+ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\""
 
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
