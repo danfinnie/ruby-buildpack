@@ -39,8 +39,11 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
       gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -c -o lib/libsqlite3.o -fPIC -lpthread -ldl sqlite3.c
       ar rcs lib/libsqlite3.a lib/libsqlite3.o
       gcc -shared -o lib/libsqlite3.so lib/libsqlite3.o
-      cp lib/libsqlite{3,}.so
-      cp lib/libsqlite{3,}.a
+      cp lib/libsqlite3.so lib/libsqlite.so
+      cp lib/libsqlite3.so lib/libsqlite3.so.0.8.6
+      cp lib/libsqlite3.a lib/libsqlite.a
+      cp lib/libsqlite3.a lib/libsqlite.la
+      cp lib/libsqlite3.a lib/libsqlite3.la
     EOT
     Process.wait(pid)
 
