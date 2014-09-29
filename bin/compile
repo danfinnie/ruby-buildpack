@@ -11,6 +11,8 @@ $stderr.sync = true
 # 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite3.so.0
 # 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite.so.0.8.6
 
+$stderr.puts `find / -name '*sqlite*'`
+
 
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
@@ -40,29 +42,10 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
 
     ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\""
 
-    $stderr.puts "#{__FILE__}:#{__LINE__}:"
-    $stderr.puts `find #{cache_dir}/sqlite`
-    $stderr.puts "*" * 50
-
     pack.topic("Compiling #{pack.name}")
-
-    $stderr.puts "#{__FILE__}:#{__LINE__}:"
-    $stderr.puts `find #{cache_dir}/sqlite`
-    $stderr.puts "*" * 50
-
     pack.log("compile") do
-      $stderr.puts "#{__FILE__}:#{__LINE__}:"
-      $stderr.puts `find #{cache_dir}/sqlite`
-      $stderr.puts "*" * 50
       pack.compile
-      $stderr.puts "#{__FILE__}:#{__LINE__}:"
-      $stderr.puts `find #{cache_dir}/sqlite`
-      $stderr.puts "*" * 50
     end
-
-    $stderr.puts "#{__FILE__}:#{__LINE__}:"
-    $stderr.puts `find #{cache_dir}/sqlite`
-    $stderr.puts "*" * 50
   end
 end
 
