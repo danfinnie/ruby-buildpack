@@ -22,7 +22,7 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
   if pack = LanguagePack.detect(ARGV[0], ARGV[1])
     LanguagePack::ShellHelpers.initialize_env(ARGV[2])
 
-    cache_dir = ARGV[1]
+    cache_dir = ARGV[0]
     $stderr.puts "cache_dir: #{cache_dir.inspect}"
 
     pid = Process.spawn <<-"EOT"
