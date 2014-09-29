@@ -36,7 +36,11 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
       mkdir include
       mkdir lib
       cp sqlite3.h include/
-      gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o lib/libsqlite3.so -fPIC -lpthread -ldl sqlite3.c
+      gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -c -o lib/libsqlite3.o -fPIC -lpthread -ldl sqlite3.c
+      ar rcs lib/libsqlite3.a lib/libsqlite3.o
+      gcc -shared -o lib/libsqlite3.so lib/libsqlite3.o
+      cp lib/libsqlite{3,}.so
+      cp lib/libsqlite{3,}.a
     EOT
     Process.wait(pid)
 
