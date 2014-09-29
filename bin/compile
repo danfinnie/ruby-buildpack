@@ -47,7 +47,7 @@ LanguagePack::Instrument.trace 'compile', 'app.compile' do
     EOT
     Process.wait(pid)
 
-    ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\""
+    ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\" -print-search-dirs"
 
     pack.topic("Compiling #{pack.name}")
     pack.log("compile") do
