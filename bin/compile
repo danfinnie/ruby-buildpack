@@ -12,25 +12,6 @@ $stderr.sync = true
 # 2014-09-28T15:39:44.70-0700 [STG]     OUT        /usr/lib/libsqlite.so.0.8.6
 
 
-
-cache_dir = ARGV[1]
-$stderr.puts "cache_dir: #{cache_dir.inspect}"
-
-pid = Process.spawn <<"EOT"
-  cd "#{cache_dir}"
-  mkdir sqlite
-  curl -o sqlite.zip 'http://www.sqlite.org/snapshot/sqlite-amalgamation-201409200035.zip'
-  unzip sqlite.zip -d sqlite
-  cd sqlite
-  mkdir include
-  mkdir lib
-  cp sqlite3.h lib/
-  gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o include/libsqlite3.so -fPIC -lpthread -ldl sqlite3.c
-EOT
-Process.wait(pid)
-
-ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\""
-
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
 require "language_pack/shell_helpers"
@@ -40,6 +21,25 @@ require 'cloud_foundry/language_pack/extensions'
 LanguagePack::Instrument.trace 'compile', 'app.compile' do
   if pack = LanguagePack.detect(ARGV[0], ARGV[1])
     LanguagePack::ShellHelpers.initialize_env(ARGV[2])
+
+    cache_dir = ARGV[1]
+    $stderr.puts "cache_dir: #{cache_dir.inspect}"
+
+    pid = Process.spawn <<-"EOT"
+      cd "#{cache_dir}"
+      mkdir sqlite
+      curl -o sqlite.zip 'http://www.sqlite.org/snapshot/sqlite-amalgamation-201409200035.zip'
+      unzip sqlite.zip -d sqlite
+      cd sqlite
+      mkdir include
+      mkdir lib
+      cp sqlite3.h lib/
+      gcc -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -O2 -shared -o include/libsqlite3.so -fPIC -lpthread -ldl sqlite3.c
+    EOT
+    Process.wait(pid)
+
+    ENV['BUNDLE_BUILD__SQLITE3'] = "--with-opt-dir=#{cache_dir}/sqlite --with-cppflags=\"-v -Wl,-v\" --with-ldflags=\"-v -Wl,-v\""
+
     pack.topic("Compiling #{pack.name}")
     pack.log("compile") do
       pack.compile
